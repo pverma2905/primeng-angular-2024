@@ -1,0 +1,113 @@
+<div *ngIf="loading">
+    <app-loader></app-loader>    
+</div>
+
+<div class="card">
+    <p-table #dt1 [value]="users" [globalFilterFields]="['id', 'name', 'email', 'password', 'mobile']"
+        selectionMode="single" [(selection)]="selectedCustomers" dataKey="id" [paginator]="true" [rows]="5"
+        [tableStyle]="{ 'min-width': '100%' }" [rowsPerPageOptions]="[5, 10, 20]" stateStorage="session"
+        stateKey="statedemo-session">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (onClick)="clear(dt1)" />
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue"
+                        (input)="dt1.filterGlobal($any($event).target.value, 'contains')"
+                        placeholder="Search keyword" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+                <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+                <th pSortableColumn="email">Email<p-sortIcon field="email" /></th>
+                <th pSortableColumn="password">Password <p-sortIcon field="password" /></th>
+                <th pSortableColumn="mobile">mobile<p-sortIcon field="mobile" /></th>
+                <th>Actions</th>
+                <!-- <th >Action</th> -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr [pSelectableRow]="product">
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.email }}</td>
+                <td>{{ product.password }}</td>
+                <td>{{ product.mobile }}</td>
+                <td>
+                    
+                    <button pButton pRipple label="Add" class="p-button-primary" (click)="openDialog('add')">
+                    </button>
+
+                    <button pButton pRipple label="update" class="p-button-success" (click)="editUser('update',product)">
+                    </button>
+
+                    <button pButton pRipple label="Delete" class="p-button-danger" (click)="deleteUser(product)">
+                    </button>
+                
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+
+
+
+
+<!-- <button pButton type="button" label="Open Dialog" (click)="openDialog()"></button> -->
+
+<p-dialog [header]="title" [(visible)]="displayDialog" [modal]="true" [closable]="true" (onHide)="onClose()">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <div class="p-field margin-top-5">
+      <!-- <label for="username">Username</label> -->
+      <input id="name" type="text" pInputText formControlName="name" placeholder="name" [(ngModel)]="userDetail['name']" />
+      <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="p-error">
+        name is required.
+      </div>
+    </div>
+
+    <div class="p-field margin-top-5">
+      <!-- <label for="email">Email</label> -->
+      <input id="email" type="text" pInputText formControlName="email" placeholder="email" [(ngModel)]="userDetail['email']" />
+      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="p-error">
+        Valid email is required.
+      </div>
+    </div>
+
+    <div class="p-field margin-top-5">
+      <!-- <label for="email">Email</label> -->
+      <input id="password" type="text" pInputText formControlName="password" placeholder="password" [(ngModel)]="userDetail['password']" />
+      <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched" class="p-error">
+        Valid password is required.
+      </div>
+    </div>
+
+    <div class="p-field margin-top-5">
+      <!-- <label for="email">Email</label> -->
+      <input id="mobile" type="text" pInputText formControlName="mobile" placeholder="mobile" [(ngModel)]="userDetail['mobile']" />
+      <div *ngIf="userForm.get('mobile')?.invalid && userForm.get('mobile')?.touched" class="p-error">
+        Valid mobile is required.
+      </div>
+    </div>
+
+    <div class="p-d-flex p-jc-end margin-top-20">
+      <button pButton type="button" label="Cancel" class="p-button-secondary" (click)="onClose()"></button>
+      <button pButton type="submit" label="Submit" class="p-button-success" [disabled]="userForm.invalid"></button>
+    </div>
+  </form>
+</p-dialog>
+
+<p-toast></p-toast>
+
+
+
+
+
+  
+
+
+
